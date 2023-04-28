@@ -21,7 +21,7 @@ function App() {
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setPokemonId(searchId);
+    setPokemonId(parseInt(searchId));
     setSearchId("");
   };
 
@@ -34,21 +34,25 @@ function App() {
     <div>
       <div className="pokedex-outline">
         <img src={sprite} />
-        <div>
+        <div className="pkm-name">
           #{pokemonId} {name}
         </div>
-        <div>{pkmDescription}</div>
+        <div className="lower-zone">
+          <div className="description-zone">{pkmDescription}</div>
+          <div className="buttons-zone">
+            <button onClick={() => setPokemonId(pokemonId - 1)}>Prev</button>
+            <button onClick={() => setPokemonId(pokemonId + 1)}>Next</button>
+          </div>
+          <form onSubmit={handleSubmit}>
+            <input
+              type="text"
+              value={searchId}
+              onChange={(e) => setSearchId(e.target.value)}
+            />
+            <button>Search</button>
+          </form>
+        </div>
       </div>
-      <button onClick={() => setPokemonId(pokemonId - 1)}>Prev</button>
-      <button onClick={() => setPokemonId(pokemonId + 1)}>Next</button>
-      <form onSubmit={handleSubmit}>
-        <input
-          type="text"
-          value={searchId}
-          onChange={(e) => setSearchId(e.target.value)}
-        />
-        <button>Search</button>
-      </form>
     </div>
   );
 }
