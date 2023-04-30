@@ -76,9 +76,29 @@ function App() {
   return (
     <div>
       <div className="pokedex-outline">
-        <img src={sprite} />
-        <div className="pkm-name">
-          #{pokemonId} {name}
+        <div className="lights-zone">
+          <div className="light"></div>
+          <div className="light"></div>
+          <div className="light"></div>
+          <div className="light"></div>
+        </div>
+        <div className="img-zone">
+          <div className="img-border">
+            <div className="img-decoration top">
+              <div className="light"></div>
+              <div className="light"></div>
+            </div>
+            <div className="img-container">
+              <img src={sprite} />
+              <div className="pkm-name">
+                #{pokemonId} {name}
+              </div>
+            </div>
+            <div className="img-decoration">
+              <div className="light"></div>
+              <div>≡</div>
+            </div>
+          </div>
         </div>
         <div className="lower-zone">
           <div className="description-zone">
@@ -95,19 +115,29 @@ function App() {
             </div>
           </div>
           <div className="buttons-zone">
-            <button onClick={prevPkm}>Prev</button>
-            <button onClick={nextPkm}>Next</button>
-            <button onClick={prevSlide}>Down</button>
-            <button onClick={nextSlide}>Up</button>
+            <button className="prev-button" onClick={prevPkm}>
+              ◁
+            </button>
+            <button className="next-button" onClick={nextPkm}>
+              ▷
+            </button>
+            <button className="down-button" onClick={prevSlide}>
+              ▽
+            </button>
+            <button className="up-button" onClick={nextSlide}>
+              △
+            </button>
           </div>
-          <form onSubmit={handleSubmit}>
-            <input
-              type="text"
-              value={searchId}
-              onChange={(e) => setSearchId(e.target.value)}
-            />
-            <button>Search</button>
-          </form>
+          <div className="search-zone">
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                value={searchId}
+                onChange={(e) => setSearchId(e.target.value)}
+              />
+              <button>search</button>
+            </form>
+          </div>
         </div>
       </div>
     </div>
