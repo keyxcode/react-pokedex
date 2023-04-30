@@ -94,13 +94,23 @@ function App() {
                 #{pokemonId} {name}
               </div>
             </div>
-            <div className="img-decoration">
+            <div className="img-decoration bottom">
               <div className="light"></div>
               <div>≡</div>
             </div>
           </div>
         </div>
         <div className="lower-zone">
+          <div className="search-zone">
+            <form onSubmit={handleSubmit}>
+              <input
+                type="text"
+                value={searchId}
+                onChange={(e) => setSearchId(e.target.value)}
+              />
+              <button>go</button>
+            </form>
+          </div>
           <div className="description-zone">
             <div className="info-slide">
               {types.map((type) => (
@@ -127,16 +137,9 @@ function App() {
             <button className="up-button" onClick={nextSlide}>
               △
             </button>
-          </div>
-          <div className="search-zone">
-            <form onSubmit={handleSubmit}>
-              <input
-                type="text"
-                value={searchId}
-                onChange={(e) => setSearchId(e.target.value)}
-              />
-              <button>search</button>
-            </form>
+            <div className="color-strip row"></div>
+            <div className="color-strip col"></div>
+            <div></div>
           </div>
         </div>
       </div>
