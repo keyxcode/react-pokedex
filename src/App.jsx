@@ -2,7 +2,11 @@ import { useState, useEffect } from "react";
 import "./App.css";
 
 function App() {
-  const [pokemonId, setPokemonId] = useState(1);
+  const [pokemonId, setPokemonId] = useState(
+    window.localStorage.getItem("pokemonId")
+      ? parseInt(JSON.parse(window.localStorage.getItem("pokemonId")))
+      : 1
+  );
   const [pkmDescription, setPkmDescription] = useState("");
   const [pkmInfo, setPkmInfo] = useState("");
   const [searchId, setSearchId] = useState("");
@@ -21,21 +25,36 @@ function App() {
   }, [pokemonId]);
 
   useEffect(() => {
+    // there are the same numbers of info slides and info lights : 3
     const slides = document.querySelectorAll(".info-slide");
+    const lights = document.querySelectorAll(".info-light");
     const slidesLength = slides.length;
 
     for (let i = 0; i < slidesLength; ++i) {
-      if (i === activeInfoSlide) slides[i].style.display = "block";
-      else {
-        slides[i].style.display = "none";
+      if (i === activeInfoSlide) {
+        slides[i].classList.add("show");
+        slides[i].classList.remove("hide");
+        lights[i].classList.add("active-light");
+      } else {
+        slides[i].classList.remove("show");
+        slides[i].classList.add("hide");
+        lights[i].classList.remove("active-light");
       }
     }
   }, [activeInfoSlide]);
+
+  useEffect(() => {
+    window.localStorage.setItem(
+      "pokemonId",
+      parseInt(JSON.stringify(pokemonId))
+    );
+  }, [pokemonId]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     setPokemonId(parseInt(searchId));
     setSearchId("");
+    mainLight();
   };
 
   const sprite = pkmInfo
@@ -53,12 +72,14 @@ function App() {
 
   const prevPkm = () => {
     setPokemonId(pokemonId - 1);
+    mainLight();
   };
   const nextPkm = () => {
     setPokemonId(pokemonId + 1);
+    mainLight();
   };
 
-  const prevSlide = () => {
+  const infoUp = () => {
     const slides = document.querySelectorAll(".info-slide");
     const currentSlide =
       activeInfoSlide - 1 < 0 ? slides.length - 1 : activeInfoSlide - 1;
@@ -66,21 +87,28 @@ function App() {
     setActiveInfoSlide(currentSlide);
   };
 
-  const nextSlide = () => {
+  const infoDown = () => {
     const slides = document.querySelectorAll(".info-slide");
     const currentSlide =
       activeInfoSlide + 1 >= slides.length ? 0 : activeInfoSlide + 1;
 
     setActiveInfoSlide(currentSlide);
   };
+
+  const mainLight = () => {
+    const light = document.querySelector(".main-light");
+    light.classList.add("active-light");
+    setTimeout(() => light.classList.remove("active-light"), 200);
+  };
+
   return (
     <div>
       <div className="pokedex-outline">
         <div className="lights-zone">
-          <div className="light"></div>
-          <div className="light"></div>
-          <div className="light"></div>
-          <div className="light"></div>
+          <div className="light main-light"></div>
+          <div className="light info-light"></div>
+          <div className="light info-light"></div>
+          <div className="light info-light"></div>
         </div>
         <div className="img-zone">
           <div className="img-border">
@@ -112,16 +140,21 @@ function App() {
             </form>
           </div>
           <div className="description-zone">
-            <div className="info-slide">
-              {types.map((type) => (
-                <span key={type}>{type} </span>
-              ))}
-            </div>
             <div className="info-slide">{pkmDescription}</div>
             <div className="info-slide">
-              {stats.map((stat) => (
-                <div key={JSON.stringify(stat)}>{JSON.stringify(stat)}</div>
+              {types.map((type) => (
+                <div key={type}>{type} </div>
               ))}
+            </div>
+            <div className="info-slide">
+              {stats.map((stat) =>
+                // <div key={JSON.stringify(stat)}>{JSON.stringify(stat)}</div>
+                Object.entries(stat).map(([key, value]) => (
+                  <div key={key}>
+                    {key}: {value}
+                  </div>
+                ))
+              )}
             </div>
           </div>
           <div className="buttons-zone">
@@ -131,10 +164,10 @@ function App() {
             <button className="next-button" onClick={nextPkm}>
               ▷
             </button>
-            <button className="down-button" onClick={prevSlide}>
+            <button className="down-button" onClick={infoDown}>
               ▽
             </button>
-            <button className="up-button" onClick={nextSlide}>
+            <button className="up-button" onClick={infoUp}>
               △
             </button>
             <div className="color-strip row"></div>
