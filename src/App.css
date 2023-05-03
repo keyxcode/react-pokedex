@@ -56,10 +56,10 @@ body {
   justify-content: center;
   box-shadow: inset 0 0 var(--xs) var(--xs) var(--black);
   align-items: center;
-  height: 670px;
+  height: min(670px, 95vh);
   width: min(400px, 95vw);
   border-radius: var(--md);
-  padding: var(--l);
+  padding: var(--s);
   background-color: var(--red);
   gap: var(--s);
 }
@@ -196,9 +196,10 @@ img {
   display: grid;
   align-items: center;
   justify-items: center;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr 1fr;
   grid-template-rows: 1fr;
   row-gap: var(--s);
+  gap: var(--xs);
 }
 
 .search-zone {
@@ -207,7 +208,9 @@ img {
 }
 
 form {
-  display: flex;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: var(--xs);
 }
 
 form > * {

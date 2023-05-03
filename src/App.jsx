@@ -131,12 +131,12 @@ function App() {
         <div className="lower-zone">
           <div className="search-zone">
             <form onSubmit={handleSubmit}>
+              <button>search</button>
               <input
                 type="text"
                 value={searchId}
                 onChange={(e) => setSearchId(e.target.value)}
               />
-              <button>go</button>
             </form>
           </div>
           <div className="description-zone">
