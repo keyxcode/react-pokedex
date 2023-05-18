@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import "./App.css";
 import { createGlobalStyle } from "styled-components";
 import Light from "./components/Light";
+import LightsZone from "./components/LightsZone";
 
 function App() {
   const [pokemonId, setPokemonId] = useState(1);
@@ -142,6 +143,7 @@ function App() {
     <>
       <GlobalStyles />
       <div className="pokedex-outline">
+        <LightsZone />
         <div className="lights-zone">
           <div className="light main-light"></div>
           <div className="light info-light"></div>
@@ -211,7 +213,6 @@ function App() {
             <div className="color-strip row"></div>
             <div className="color-strip col"></div>
           </div>
-          <Light bgColor="var(--blue)" size="var(--l)" />
         </div>
       </div>
     </>

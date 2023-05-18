@@ -6,8 +6,8 @@ const Light = styled.div`
   border-radius: 50%;
   display: inline-block;
   border: var(--xs) solid var(--black);
-  /* background-color: ${(props) => props.bgColor || "#fff"}; */
-  background-color: ${(props) => props.bgColor || "#fff"};
+  /* background-color: ${(props) => props.color || "#fff"}; */
+  background-color: ${(props) => props.color || "#fff"};
 `;
 
 export default Light;
