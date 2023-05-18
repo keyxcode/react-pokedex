@@ -1,30 +1,52 @@
 import { useState, useEffect } from "react";
-import "./App.css";
+// import "./App.css";
 import { createGlobalStyle } from "styled-components";
 import { COLORS, SIZES } from "./utils/constants";
 
 function App() {
-  const [pokemonId, setPokemonId] = useState(
-    window.localStorage.getItem("pokemonId")
-      ? parseInt(JSON.parse(window.localStorage.getItem("pokemonId")))
-      : 1
-  );
-  const [pkmDescription, setPkmDescription] = useState("");
-  const [pkmInfo, setPkmInfo] = useState("");
+  const [pokemonId, setPokemonId] = useState(1);
+  const [pkmObject, setPkmObject] = useState({
+    sprite: "",
+    name: "",
+    types: [],
+    stats: [],
+    description: "",
+  });
   const [searchId, setSearchId] = useState("");
   const [activeInfoSlide, setActiveInfoSlide] = useState(0);
 
   useEffect(() => {
     fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
       .then((response) => response.json())
-      .then((data) => setPkmInfo(data));
+      .then((data) => {
+        setPkmObject((prevState) => ({
+          ...prevState,
+          sprite: data["sprites"]["other"]["official-artwork"]["front_default"],
+          name: data["name"],
+          types: data["types"].map((slot) => slot["type"]["name"]),
+          stats: data["stats"].map((stat) => ({
+            [stat["stat"]["name"]]: stat["base_stat"],
+          })),
+        }));
+      });
 
     fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`)
       .then((response) => response.json())
-      .then((data) =>
-        setPkmDescription(data["flavor_text_entries"][0]["flavor_text"])
-      );
+      .then((data) => {
+        setPkmObject((prevState) => ({
+          ...prevState,
+          description: data["flavor_text_entries"][0]["flavor_text"],
+        }));
+      });
   }, [pokemonId]);
+
+  useEffect(() => {
+    setPokemonId(
+      window.localStorage.getItem("pokemonId")
+        ? parseInt(JSON.parse(window.localStorage.getItem("pokemonId")))
+        : 1
+    );
+  }, []);
 
   useEffect(() => {
     // there are the same numbers of info slides and info lights : 3
@@ -58,19 +80,6 @@ function App() {
     setSearchId("");
     mainLight();
   };
-
-  const sprite = pkmInfo
-    ? pkmInfo["sprites"]["other"]["official-artwork"]["front_default"]
-    : "";
-  const name = pkmInfo ? pkmInfo["name"] : "";
-  const types = pkmInfo
-    ? pkmInfo["types"].map((slot) => slot["type"]["name"])
-    : [];
-  const stats = pkmInfo
-    ? pkmInfo["stats"].map((stat) => ({
-        [stat["stat"]["name"]]: stat["base_stat"],
-      }))
-    : [];
 
   const prevPkm = () => {
     setPokemonId(pokemonId - 1);
@@ -146,9 +155,9 @@ function App() {
               <div className="light"></div>
             </div>
             <div className="img-container">
-              <img src={sprite} />
+              <img src={pkmObject.sprite} />
               <div className="pkm-name">
-                #{pokemonId} {name}
+                #{pokemonId} {pkmObject.name}
               </div>
             </div>
             <div className="img-decoration bottom">
@@ -169,14 +178,14 @@ function App() {
             </form>
           </div>
           <div className="description-zone">
-            <div className="info-slide">{pkmDescription}</div>
+            <div className="info-slide">{pkmObject.description}</div>
             <div className="info-slide">
-              {types.map((type) => (
+              {pkmObject.types.map((type) => (
                 <div key={type}>{type} </div>
               ))}
             </div>
             <div className="info-slide">
-              {stats.map((stat) =>
+              {pkmObject.stats.map((stat) =>
                 // <div key={JSON.stringify(stat)}>{JSON.stringify(stat)}</div>
                 Object.entries(stat).map(([key, value]) => (
                   <div key={key}>
