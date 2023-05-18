@@ -82,7 +82,7 @@ body {
 }
 
 .active-light {
-  transition: 0.3s;
+  transition: 0.5s;
   filter: brightness(2.5);
 }
 

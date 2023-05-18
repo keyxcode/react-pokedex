@@ -15,6 +15,7 @@ function App() {
   });
   const [searchId, setSearchId] = useState("");
   const [activeInfoSlide, setActiveInfoSlide] = useState(0);
+  const [mainLightActive, setMainLightActive] = useState(false);
 
   useEffect(() => {
     fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
@@ -89,9 +90,10 @@ function App() {
   };
 
   const mainLight = () => {
-    const light = document.querySelector(".main-light");
-    light.classList.add("active-light");
-    setTimeout(() => light.classList.remove("active-light"), 200);
+    setMainLightActive(true);
+    setTimeout(() => {
+      setMainLightActive(false);
+    }, 250);
   };
 
   const GlobalStyles = createGlobalStyle`
@@ -124,10 +126,10 @@ function App() {
     <>
       <GlobalStyles />
       <div className="pokedex-outline">
-        <LightsZone activeInfoSlide={activeInfoSlide} />
-        <div className="lights-zone">
-          <div className="light main-light"></div>
-        </div>
+        <LightsZone
+          activeInfoSlide={activeInfoSlide}
+          mainLightActive={mainLightActive}
+        />
         <div className="img-zone">
           <div className="img-border">
             <div className="img-decoration top">

@@ -11,16 +11,22 @@ const LightsZoneContainer = styled("div")`
   border-bottom: var(--xs) solid var(--dark-red);
 `;
 
-const LightsZone = ({ activeInfoSlide }) => {
+// Need to provide type
+// Investigate gradual className change
+const LightsZone = ({ activeInfoSlide, mainLightActive }) => {
+  console.log(activeInfoSlide, mainLightActive);
   return (
     <LightsZoneContainer>
-      <Light color="var(--blue)" size="var(--xxl)" style={{ filter: "none" }} />
+      <Light
+        color="var(--blue)"
+        className={mainLightActive ? "active-light" : ""}
+        size="var(--xxl)"
+      />
       <Light
         color="var(--dark-red)"
         className={activeInfoSlide === 0 ? "active-light" : ""}
         style={{
           gridColumn: 2,
-          // filter: activeInfoSlide === 0 ? "brightness(2)" : "none",
         }}
       />
       <Light
@@ -28,7 +34,6 @@ const LightsZone = ({ activeInfoSlide }) => {
         className={activeInfoSlide === 1 ? "active-light" : ""}
         style={{
           gridColumn: 3,
-          // filter: activeInfoSlide === 1 ? "brightness(2)" : "none",
         }}
       />
       <Light
@@ -36,7 +41,6 @@ const LightsZone = ({ activeInfoSlide }) => {
         className={activeInfoSlide === 2 ? "active-light" : ""}
         style={{
           gridColumn: 4,
-          // filter: activeInfoSlide === 2 ? "brightness(2)" : "none",
         }}
       />
     </LightsZoneContainer>
