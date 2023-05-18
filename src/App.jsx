@@ -1,7 +1,8 @@
 import { useState, useEffect } from "react";
-// import "./App.css";
+import "./App.css";
 import { createGlobalStyle } from "styled-components";
 import { COLORS, SIZES } from "./utils/constants";
+import Light from "./components/Light";
 
 function App() {
   const [pokemonId, setPokemonId] = useState(1);
@@ -49,6 +50,13 @@ function App() {
   }, []);
 
   useEffect(() => {
+    window.localStorage.setItem(
+      "pokemonId",
+      parseInt(JSON.stringify(pokemonId))
+    );
+  }, [pokemonId]);
+
+  useEffect(() => {
     // there are the same numbers of info slides and info lights : 3
     const slides = document.querySelectorAll(".info-slide");
     const lights = document.querySelectorAll(".info-light");
@@ -66,13 +74,6 @@ function App() {
       }
     }
   }, [activeInfoSlide]);
-
-  useEffect(() => {
-    window.localStorage.setItem(
-      "pokemonId",
-      parseInt(JSON.stringify(pokemonId))
-    );
-  }, [pokemonId]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
@@ -142,6 +143,9 @@ function App() {
     <>
       <GlobalStyles />
       <div className="pokedex-outline">
+        <Light />
+        <Light />
+        <Light />
         <div className="lights-zone">
           <div className="light main-light"></div>
           <div className="light info-light"></div>
@@ -210,7 +214,6 @@ function App() {
             </button>
             <div className="color-strip row"></div>
             <div className="color-strip col"></div>
-            <div></div>
           </div>
         </div>
       </div>
