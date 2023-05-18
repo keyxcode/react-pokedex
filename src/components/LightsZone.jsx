@@ -11,13 +11,34 @@ const LightsZoneContainer = styled("div")`
   border-bottom: var(--xs) solid var(--dark-red);
 `;
 
-const LightsZone = () => {
+const LightsZone = ({ activeInfoSlide }) => {
   return (
     <LightsZoneContainer>
-      <Light color="var(--blue)" size="var(--xxl)" />
-      <Light color="var(--dark-red)" style={{ gridColumn: 2 }} />
-      <Light color="var(--yellow)" style={{ gridColumn: 3 }} />
-      <Light color="var(--green)" style={{ gridColumn: 4 }} />
+      <Light color="var(--blue)" size="var(--xxl)" style={{ filter: "none" }} />
+      <Light
+        color="var(--dark-red)"
+        className={activeInfoSlide === 0 ? "active-light" : ""}
+        style={{
+          gridColumn: 2,
+          // filter: activeInfoSlide === 0 ? "brightness(2)" : "none",
+        }}
+      />
+      <Light
+        color="var(--yellow)"
+        className={activeInfoSlide === 1 ? "active-light" : ""}
+        style={{
+          gridColumn: 3,
+          // filter: activeInfoSlide === 1 ? "brightness(2)" : "none",
+        }}
+      />
+      <Light
+        color="var(--green)"
+        className={activeInfoSlide === 2 ? "active-light" : ""}
+        style={{
+          gridColumn: 4,
+          // filter: activeInfoSlide === 2 ? "brightness(2)" : "none",
+        }}
+      />
     </LightsZoneContainer>
   );
 };

@@ -81,28 +81,9 @@ body {
   filter: brightness(1);
 }
 
-.info-light {
-  filter: brightness(0.9);
-}
-
 .active-light {
   transition: 0.3s;
   filter: brightness(2.5);
-}
-
-.lights-zone > .light:nth-child(2) {
-  background-color: var(--dark-red);
-  grid-column: 2;
-}
-
-.lights-zone > .light:nth-child(3) {
-  background-color: var(--yellow);
-  grid-column: 3;
-}
-
-.lights-zone > .light:nth-child(4) {
-  background-color: var(--green);
-  grid-column: 4;
 }
 
 .img-zone {

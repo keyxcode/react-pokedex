@@ -56,25 +56,6 @@ function App() {
     );
   }, [pokemonId]);
 
-  useEffect(() => {
-    // there are the same numbers of info slides and info lights : 3
-    const slides = document.querySelectorAll(".info-slide");
-    const lights = document.querySelectorAll(".info-light");
-    const slidesLength = slides.length;
-
-    for (let i = 0; i < slidesLength; ++i) {
-      if (i === activeInfoSlide) {
-        slides[i].classList.add("show");
-        slides[i].classList.remove("hide");
-        lights[i].classList.add("active-light");
-      } else {
-        slides[i].classList.remove("show");
-        slides[i].classList.add("hide");
-        lights[i].classList.remove("active-light");
-      }
-    }
-  }, [activeInfoSlide]);
-
   const handleSubmit = (event) => {
     event.preventDefault();
     setPokemonId(parseInt(searchId));
@@ -143,12 +124,9 @@ function App() {
     <>
       <GlobalStyles />
       <div className="pokedex-outline">
-        <LightsZone />
+        <LightsZone activeInfoSlide={activeInfoSlide} />
         <div className="lights-zone">
           <div className="light main-light"></div>
-          <div className="light info-light"></div>
-          <div className="light info-light"></div>
-          <div className="light info-light"></div>
         </div>
         <div className="img-zone">
           <div className="img-border">
