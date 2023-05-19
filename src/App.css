@@ -43,11 +43,6 @@ body {
   gap: var(--xs);
 }
 
-.search-zone {
-  grid-column: 1 / span 2;
-  width: 100%;
-}
-
 form {
   display: grid;
   grid-template-columns: 1fr 1fr;

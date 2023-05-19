@@ -4,6 +4,7 @@ import GlobalStyles from "./GlobalStyles";
 import Light from "./components/Light";
 import LightsZone from "./components/LightsZone";
 import ImageZone from "./components/ImageZone";
+import SearchForm from "./components/SearchForm";
 
 function App() {
   const [pokemonId, setPokemonId] = useState(1);
@@ -111,16 +112,11 @@ function App() {
           name={pkmObject.name}
         />
         <div className="lower-zone">
-          <div className="search-zone">
-            <form onSubmit={handleSubmit}>
-              <button>search</button>
-              <input
-                type="text"
-                value={searchId}
-                onChange={(e) => setSearchId(e.target.value)}
-              />
-            </form>
-          </div>
+          <SearchForm
+            handleSubmit={handleSubmit}
+            setSearchId={setSearchId}
+            searchId={searchId}
+          />
           <div className="description-zone">
             <div className="info-slide">{pkmObject.description}</div>
             <div className="info-slide">
