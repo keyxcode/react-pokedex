@@ -16,8 +16,8 @@ const ControlsContainer = styled.div`
 
 const ControlZone = ({
   handleSubmit,
-  setSearchId,
-  searchId,
+  setFormInput,
+  formInput,
   pkmObject,
   activeInfoSlide,
   prevPkm,
@@ -29,8 +29,8 @@ const ControlZone = ({
     <ControlsContainer>
       <SearchForm
         handleSubmit={handleSubmit}
-        setSearchId={setSearchId}
-        searchId={searchId}
+        setFormInput={setFormInput}
+        formInput={formInput}
       />
       <InfoSlides pkmObject={pkmObject} activeInfoSlide={activeInfoSlide} />
       <NavigationButtons

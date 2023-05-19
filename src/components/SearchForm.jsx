@@ -31,15 +31,15 @@ const FormButton = styled(Button)`
   width: 100%;
 `;
 
-const SearchForm = ({ handleSubmit, setSearchId, searchId }) => {
+const SearchForm = ({ handleSubmit, setFormInput, formInput }) => {
   return (
     <Container>
       <StyledForm onSubmit={handleSubmit}>
         <FormButton>search</FormButton>
         <FormInput
           type="text"
-          value={searchId}
-          onChange={(e) => setSearchId(e.target.value)}
+          value={formInput}
+          onChange={(e) => setFormInput(e.target.value)}
         />
       </StyledForm>
     </Container>

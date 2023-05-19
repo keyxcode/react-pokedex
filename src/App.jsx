@@ -4,10 +4,16 @@ import GlobalStyles from "./GlobalStyles";
 import PokedexContainer from "./components/PokedexContainer";
 import LightsZone from "./components/LightsZone";
 import ImageZone from "./components/ImageZone";
-import ControlZone from "./components/ControlsContainer";
+import ControlZone from "./components/ControlsZone";
+
+const MAX_ID_POKEMON = 1010;
 
 function App() {
-  const [pokemonId, setPokemonId] = useState(1);
+  const [searchQuery, setSearchQuery] = useState(
+    window.localStorage.getItem("searchQuery")
+      ? JSON.parse(window.localStorage.getItem("searchQuery"))
+      : 1
+  );
   const [pkmObject, setPkmObject] = useState({
     sprite: "",
     name: "",
@@ -17,13 +23,14 @@ function App() {
     genus: "",
     weight: "",
     height: "",
+    id: "",
   });
-  const [searchId, setSearchId] = useState("");
+  const [formInput, setFormInput] = useState("");
   const [activeInfoSlide, setActiveInfoSlide] = useState(0);
   const [mainLightActive, setMainLightActive] = useState(false);
 
   useEffect(() => {
-    fetch(`https://pokeapi.co/api/v2/pokemon/${pokemonId}`)
+    fetch(`https://pokeapi.co/api/v2/pokemon/${searchQuery}`)
       .then((response) => response.json())
       .then((data) => {
         setPkmObject((prevState) => ({
@@ -37,9 +44,11 @@ function App() {
           weight: data["weight"],
           height: data["height"],
         }));
-      });
+        window.localStorage.setItem("searchQuery", JSON.stringify(searchQuery));
+      })
+      .catch((e) => console.log(e));
 
-    fetch(`https://pokeapi.co/api/v2/pokemon-species/${pokemonId}/`)
+    fetch(`https://pokeapi.co/api/v2/pokemon-species/${searchQuery}/`)
       .then((response) => response.json())
       .then((data) => {
         setPkmObject((prevState) => ({
@@ -50,38 +59,37 @@ function App() {
           genus: data["genera"].filter(
             (g) => g["language"]["name"] === "en"
           )[0]["genus"],
+          id: data["id"],
         }));
-      });
-  }, [pokemonId]);
-
-  useEffect(() => {
-    setPokemonId(
-      window.localStorage.getItem("pokemonId")
-        ? parseInt(JSON.parse(window.localStorage.getItem("pokemonId")))
-        : 1
-    );
-  }, []);
-
-  useEffect(() => {
-    window.localStorage.setItem(
-      "pokemonId",
-      parseInt(JSON.stringify(pokemonId))
-    );
-  }, [pokemonId]);
+      })
+      .catch((e) => console.log(e));
+  }, [searchQuery]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
-    setPokemonId(parseInt(searchId));
-    setSearchId("");
+
+    const parsedQuery = parseInt(formInput);
+    if (!isNaN(parsedQuery)) {
+      if (parsedQuery < 0 || parsedQuery > MAX_ID_POKEMON) {
+        console.log("invalid id");
+      } else {
+        setSearchQuery(parsedQuery);
+      }
+    } else {
+      setSearchQuery(formInput);
+      console.log("query is a string");
+    }
+
+    setFormInput("");
     toggleMainLight();
   };
 
   const prevPkm = () => {
-    setPokemonId(pokemonId - 1);
+    setSearchQuery(pkmObject.id - 1);
     toggleMainLight();
   };
   const nextPkm = () => {
-    setPokemonId(pokemonId + 1);
+    setSearchQuery(pkmObject.id + 1);
     toggleMainLight();
   };
 
@@ -119,13 +127,13 @@ function App() {
         />
         <ImageZone
           sprite={pkmObject.sprite}
-          id={pokemonId}
+          id={pkmObject.id}
           name={pkmObject.name}
         />
         <ControlZone
           handleSubmit={handleSubmit}
-          setSearchId={setSearchId}
-          searchId={searchId}
+          setFormInput={setFormInput}
+          formInput={formInput}
           pkmObject={pkmObject}
           activeInfoSlide={activeInfoSlide}
           prevPkm={prevPkm}
