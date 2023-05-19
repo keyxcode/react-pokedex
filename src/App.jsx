@@ -14,6 +14,9 @@ function App() {
     types: [],
     stats: [],
     description: "",
+    genus: "",
+    weight: "",
+    height: "",
   });
   const [searchId, setSearchId] = useState("");
   const [activeInfoSlide, setActiveInfoSlide] = useState(0);
@@ -31,6 +34,8 @@ function App() {
           stats: data["stats"].map((stat) => ({
             [stat["stat"]["name"]]: stat["base_stat"],
           })),
+          weight: data["weight"],
+          height: data["height"],
         }));
       });
 
@@ -42,6 +47,9 @@ function App() {
           description: data["flavor_text_entries"].filter(
             (entry) => entry["language"]["name"] === "en"
           )[0]["flavor_text"],
+          genus: data["genera"].filter(
+            (g) => g["language"]["name"] === "en"
+          )[0]["genus"],
         }));
       });
   }, [pokemonId]);

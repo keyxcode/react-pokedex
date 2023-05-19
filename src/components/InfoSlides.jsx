@@ -29,9 +29,16 @@ const InfoSlides = ({ pkmObject, activeInfoSlide }) => {
         {pkmObject.description}
       </div>
       <div style={activeInfoSlide === 1 ? showStyle : hideStyle}>
-        {pkmObject.types.map((type) => (
-          <div key={type}>{type} </div>
-        ))}
+        <div>{pkmObject.genus}</div>
+        ---
+        <div>{parseFloat(pkmObject.weight) / 10} kg</div>
+        <div>{parseFloat(pkmObject.height) / 10} m</div>
+        ---
+        <ul style={{ paddingLeft: 15, margin: 0 }}>
+          {pkmObject.types.map((type) => (
+            <li key={type}>{type} </li>
+          ))}
+        </ul>
       </div>
       <div style={activeInfoSlide === 2 ? showStyle : hideStyle}>
         {pkmObject.stats.map((stat) =>
