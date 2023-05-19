@@ -42,25 +42,3 @@ body {
   row-gap: var(--s);
   gap: var(--xs);
 }
-
-form {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: var(--xs);
-}
-
-form > * {
-  width: 100%;
-}
-
-form > input {
-  background-color: var(--blue);
-  color: var(--black);
-  border-radius: var(--s);
-  border: var(--xs) solid var(--black);
-  padding: 0;
-}
-
-form input[type="text"]:focus {
-  outline: none;
-}

@@ -41,20 +41,21 @@ const Image = styled.img`
   background-color: var(--blue);
 `;
 
+const StaticLight = styled(Light)`
+  background-color: var(--dark-red);
+`;
+
+const SmallStaticLight = styled(StaticLight)`
+  border: var(--xxs) solid var(--black);
+  margin: 0 var(--s);
+`;
+
 const ImageZone = ({ sprite, id, name }) => {
   return (
     <Container>
       <DecorationStrip style={{ justifyContent: "center" }}>
         {[...Array(2)].map((e, i) => (
-          <Light
-            key={i}
-            color="var(--dark-red)"
-            size="var(--s)"
-            style={{
-              border: "var(--xxs) solid var(--black)",
-              margin: "0 var(--s)",
-            }}
-          />
+          <SmallStaticLight key={i} size="var(--s)" />
         ))}
       </DecorationStrip>
       <ImageContainer>
@@ -64,7 +65,7 @@ const ImageZone = ({ sprite, id, name }) => {
         </div>
       </ImageContainer>
       <DecorationStrip>
-        <Light color="var(--dark-red)" />
+        <StaticLight />
         <div>≡</div>
       </DecorationStrip>
     </Container>
