@@ -1,4 +1,5 @@
 import { createGlobalStyle } from "styled-components";
+import background from "./assets/background.png";
 
 const GlobalStyles = createGlobalStyle`
 * {
@@ -23,6 +24,22 @@ font-family: "Silkscreen", system-ui, -apple-system, BlinkMacSystemFont,
 --md: 16px;
 --l: 24px;
 --xxl: 48px;
+}
+
+body {
+  background-image: url(${background});
+  background-repeat: repeat;
+  background-size: 30%;
+  backdrop-filter: grayscale(100%);
+  -webkit-backdrop-filter: grayscale(100%);
+
+  overflow-x: hidden;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  background-color: var(--dark-gray);
 }
 `;
 
