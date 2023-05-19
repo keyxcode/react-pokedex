@@ -114,7 +114,7 @@ function App() {
         />
         <ControlZone
           handleSubmit={handleSubmit}
-          setSearchId={searchId}
+          setSearchId={setSearchId}
           searchId={searchId}
           pkmObject={pkmObject}
           activeInfoSlide={activeInfoSlide}
