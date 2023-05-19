@@ -39,7 +39,9 @@ function App() {
       .then((data) => {
         setPkmObject((prevState) => ({
           ...prevState,
-          description: data["flavor_text_entries"][0]["flavor_text"],
+          description: data["flavor_text_entries"].filter(
+            (entry) => entry["language"]["name"] === "en"
+          )[0]["flavor_text"],
         }));
       });
   }, [pokemonId]);
