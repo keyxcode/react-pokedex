@@ -1,11 +1,11 @@
 import { useState, useEffect } from "react";
 import "./App.css";
 import GlobalStyles from "./GlobalStyles";
-import Light from "./components/Light";
 import LightsZone from "./components/LightsZone";
 import ImageZone from "./components/ImageZone";
 import SearchForm from "./components/SearchForm";
 import InfoSlides from "./components/InfoSlides";
+import NavigationButtons from "./components/NavigationButtons";
 
 function App() {
   const [pokemonId, setPokemonId] = useState(1);
@@ -120,22 +120,12 @@ function App() {
             searchId={searchId}
           />
           <InfoSlides pkmObject={pkmObject} activeInfoSlide={activeInfoSlide} />
-          <div className="buttons-zone">
-            <button className="prev-button" onClick={prevPkm}>
-              ◁
-            </button>
-            <button className="next-button" onClick={nextPkm}>
-              ▷
-            </button>
-            <button className="down-button" onClick={infoDown}>
-              ▽
-            </button>
-            <button className="up-button" onClick={infoUp}>
-              △
-            </button>
-            <div className="color-strip row"></div>
-            <div className="color-strip col"></div>
-          </div>
+          <NavigationButtons
+            prevPkm={prevPkm}
+            nextPkm={nextPkm}
+            infoUp={infoUp}
+            infoDown={infoDown}
+          />
         </div>
       </div>
     </>
