@@ -19,26 +19,26 @@ const LightsZone = ({ activeInfoSlide, mainLightActive }) => {
     <LightsZoneContainer>
       <Light
         color="var(--blue)"
-        className={mainLightActive ? "active-light" : ""}
+        className={mainLightActive ? "active-light" : "inactive-light"}
         size="var(--xxl)"
       />
       <Light
         color="var(--dark-red)"
-        className={activeInfoSlide === 0 ? "active-light" : ""}
+        className={activeInfoSlide === 0 && "active-light"}
         style={{
           gridColumn: 2,
         }}
       />
       <Light
         color="var(--yellow)"
-        className={activeInfoSlide === 1 ? "active-light" : ""}
+        className={activeInfoSlide === 1 && "active-light"}
         style={{
           gridColumn: 3,
         }}
       />
       <Light
         color="var(--green)"
-        className={activeInfoSlide === 2 ? "active-light" : ""}
+        className={activeInfoSlide === 2 && "active-light"}
         style={{
           gridColumn: 4,
         }}
