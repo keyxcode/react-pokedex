@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Button from "./Button";
 
 const Container = styled.div`
   grid-column: 1 / span 2;
@@ -9,7 +10,9 @@ const SearchForm = ({ handleSubmit, setSearchId, searchId }) => {
   return (
     <Container>
       <form onSubmit={handleSubmit}>
-        <button>search</button>
+        <Button style={{ backgroundColor: "var(--dark-red)", padding: 0 }}>
+          search
+        </Button>
         <input
           type="text"
           value={searchId}

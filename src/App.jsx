@@ -5,7 +5,7 @@ import LightsZone from "./components/LightsZone";
 import ImageZone from "./components/ImageZone";
 import SearchForm from "./components/SearchForm";
 import InfoSlides from "./components/InfoSlides";
-import NavigationButtons from "./components/NavigationButtons";
+import NavigationButtons from "./components/Navigation";
 
 function App() {
   const [pokemonId, setPokemonId] = useState(1);
