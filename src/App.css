@@ -22,16 +22,6 @@ body {
   gap: var(--s);
 }
 
-.active-light {
-  transition: 0.3s;
-  filter: brightness(2.5);
-}
-
-.inactive-light {
-  transition: 0.3s;
-  filter: brightness(1);
-}
-
 .lower-zone {
   width: 90%;
   display: grid;

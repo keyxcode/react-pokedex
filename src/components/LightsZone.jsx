@@ -3,7 +3,7 @@ import styled from "styled-components";
 
 const LightsZoneContainer = styled("div")`
   width: 100%;
-  display: grid;
+  display: flex;
   justify-content: start;
   align-items: start;
   gap: var(--s);
@@ -11,37 +11,37 @@ const LightsZoneContainer = styled("div")`
   border-bottom: var(--xs) solid var(--dark-red);
 `;
 
+const activeLightStyle = {
+  transition: "0.3s",
+  filter: "brightness(2.5)",
+};
+
+const inactiveLightStyle = {
+  transition: "0.3s",
+  filter: "brightness(1)",
+};
+
 // Need to provide type
-// Investigate gradual className change
 const LightsZone = ({ activeInfoSlide, mainLightActive }) => {
   console.log(activeInfoSlide, mainLightActive);
   return (
     <LightsZoneContainer>
       <Light
         color="var(--blue)"
-        className={mainLightActive ? "active-light" : "inactive-light"}
         size="var(--xxl)"
+        style={mainLightActive ? activeLightStyle : inactiveLightStyle}
       />
       <Light
         color="var(--dark-red)"
-        className={activeInfoSlide === 0 && "active-light"}
-        style={{
-          gridColumn: 2,
-        }}
+        style={activeInfoSlide === 0 ? activeLightStyle : inactiveLightStyle}
       />
       <Light
         color="var(--yellow)"
-        className={activeInfoSlide === 1 && "active-light"}
-        style={{
-          gridColumn: 3,
-        }}
+        style={activeInfoSlide === 1 ? activeLightStyle : inactiveLightStyle}
       />
       <Light
         color="var(--green)"
-        className={activeInfoSlide === 2 && "active-light"}
-        style={{
-          gridColumn: 4,
-        }}
+        style={activeInfoSlide === 2 ? activeLightStyle : inactiveLightStyle}
       />
     </LightsZoneContainer>
   );
