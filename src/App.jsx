@@ -3,6 +3,7 @@ import "./App.css";
 import { createGlobalStyle } from "styled-components";
 import Light from "./components/Light";
 import LightsZone from "./components/LightsZone";
+import ImageZone from "./components/ImageZone";
 
 function App() {
   const [pokemonId, setPokemonId] = useState(1);
@@ -130,24 +131,11 @@ function App() {
           activeInfoSlide={activeInfoSlide}
           mainLightActive={mainLightActive}
         />
-        <div className="img-zone">
-          <div className="img-border">
-            <div className="img-decoration top">
-              <div className="light"></div>
-              <div className="light"></div>
-            </div>
-            <div className="img-container">
-              <img src={pkmObject.sprite} />
-              <div className="pkm-name">
-                #{pokemonId} {pkmObject.name}
-              </div>
-            </div>
-            <div className="img-decoration bottom">
-              <div className="light"></div>
-              <div>≡</div>
-            </div>
-          </div>
-        </div>
+        <ImageZone
+          sprite={pkmObject.sprite}
+          id={pokemonId}
+          name={pkmObject.name}
+        />
         <div className="lower-zone">
           <div className="search-zone">
             <form onSubmit={handleSubmit}>
@@ -168,7 +156,6 @@ function App() {
             </div>
             <div className="info-slide">
               {pkmObject.stats.map((stat) =>
-                // <div key={JSON.stringify(stat)}>{JSON.stringify(stat)}</div>
                 Object.entries(stat).map(([key, value]) => (
                   <div key={key}>
                     {key}: {value}
