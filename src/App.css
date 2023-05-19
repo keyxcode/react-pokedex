@@ -70,28 +70,6 @@ form > button {
   padding: 0;
 }
 
-.description-zone {
-  grid-column: 1;
-  grid-row: 2 / span 3;
-  height: 200px;
-  width: 100%;
-  font-size: small;
-  overflow-y: scroll;
-  background-color: var(--green);
-  padding: var(--xs);
-  border-radius: var(--s);
-  border: var(--xs) solid var(--black);
-  word-wrap: break-word;
-}
-
-.show {
-  display: block;
-}
-
-.hide {
-  display: none;
-}
-
 .buttons-zone {
   grid-column: 2;
   grid-row: 2 / span 3;

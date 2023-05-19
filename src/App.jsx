@@ -5,6 +5,7 @@ import Light from "./components/Light";
 import LightsZone from "./components/LightsZone";
 import ImageZone from "./components/ImageZone";
 import SearchForm from "./components/SearchForm";
+import InfoSlides from "./components/InfoSlides";
 
 function App() {
   const [pokemonId, setPokemonId] = useState(1);
@@ -63,35 +64,36 @@ function App() {
     event.preventDefault();
     setPokemonId(parseInt(searchId));
     setSearchId("");
-    mainLight();
+    toggleMainLight();
   };
 
   const prevPkm = () => {
     setPokemonId(pokemonId - 1);
-    mainLight();
+    toggleMainLight();
   };
   const nextPkm = () => {
     setPokemonId(pokemonId + 1);
-    mainLight();
+    toggleMainLight();
   };
 
+  // There are 3 info slides in total
+  const MAX_SLIDE_INDEX = 2;
+
   const infoUp = () => {
-    const slides = document.querySelectorAll(".info-slide");
     const currentSlide =
-      activeInfoSlide - 1 < 0 ? slides.length - 1 : activeInfoSlide - 1;
+      activeInfoSlide - 1 < 0 ? MAX_SLIDE_INDEX : activeInfoSlide - 1;
 
     setActiveInfoSlide(currentSlide);
   };
 
   const infoDown = () => {
-    const slides = document.querySelectorAll(".info-slide");
     const currentSlide =
-      activeInfoSlide + 1 >= slides.length ? 0 : activeInfoSlide + 1;
+      activeInfoSlide + 1 > MAX_SLIDE_INDEX ? 0 : activeInfoSlide + 1;
 
     setActiveInfoSlide(currentSlide);
   };
 
-  const mainLight = () => {
+  const toggleMainLight = () => {
     setMainLightActive(true);
     setTimeout(() => {
       setMainLightActive(false);
@@ -117,23 +119,7 @@ function App() {
             setSearchId={setSearchId}
             searchId={searchId}
           />
-          <div className="description-zone">
-            <div className="info-slide">{pkmObject.description}</div>
-            <div className="info-slide">
-              {pkmObject.types.map((type) => (
-                <div key={type}>{type} </div>
-              ))}
-            </div>
-            <div className="info-slide">
-              {pkmObject.stats.map((stat) =>
-                Object.entries(stat).map(([key, value]) => (
-                  <div key={key}>
-                    {key}: {value}
-                  </div>
-                ))
-              )}
-            </div>
-          </div>
+          <InfoSlides pkmObject={pkmObject} activeInfoSlide={activeInfoSlide} />
           <div className="buttons-zone">
             <button className="prev-button" onClick={prevPkm}>
               ◁
