@@ -1,4 +1,7 @@
 import styled from "styled-components";
+import SearchForm from "./SearchForm";
+import InfoSlides from "./InfoSlides";
+import NavigationButtons from "./Navigation";
 
 const ControlsContainer = styled.div`
   width: 90%;
@@ -11,4 +14,33 @@ const ControlsContainer = styled.div`
   gap: var(--xs);
 `;
 
-export default ControlsContainer;
+const ControlZone = ({
+  handleSubmit,
+  setSearchId,
+  searchId,
+  pkmObject,
+  activeInfoSlide,
+  prevPkm,
+  nextPkm,
+  infoUp,
+  infoDown,
+}) => {
+  return (
+    <ControlsContainer>
+      <SearchForm
+        handleSubmit={handleSubmit}
+        setSearchId={setSearchId}
+        searchId={searchId}
+      />
+      <InfoSlides pkmObject={pkmObject} activeInfoSlide={activeInfoSlide} />
+      <NavigationButtons
+        prevPkm={prevPkm}
+        nextPkm={nextPkm}
+        infoUp={infoUp}
+        infoDown={infoDown}
+      />
+    </ControlsContainer>
+  );
+};
+
+export default ControlZone;
