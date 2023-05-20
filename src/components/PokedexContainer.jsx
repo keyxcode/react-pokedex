@@ -6,7 +6,7 @@ const PokedexContainer = styled.div`
   justify-content: center;
   box-shadow: inset 0 0 var(--xs) var(--xs) var(--black);
   align-items: center;
-  height: min(670px, 95vh);
+  height: 670px;
   width: min(400px, 95vw);
   border-radius: var(--md);
   padding: var(--s);
