@@ -35,6 +35,7 @@ body {
 
   overflow-x: hidden;
   display: flex;
+  margin: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;
