@@ -7,9 +7,9 @@ const getPokemon = (query) => {
   return request.then((response) => response.data);
 };
 
-const getPokemonSpecie = (query) => {
+const getSpecie = (query) => {
   const request = axios.get(`${baseUrl}/pokemon-species/${query}`);
   return request.then((response) => response.data);
 };
 
-export default { getPokemon, getPokemonSpecie };
+export default { getPokemon, getSpecie };

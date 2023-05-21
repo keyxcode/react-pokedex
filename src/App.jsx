@@ -18,6 +18,8 @@ function App() {
       ? JSON.parse(window.localStorage.getItem("searchQuery"))
       : 1
   );
+  const [pokemonData, setPokemonData] = useState("");
+  const [specieData, setSpecieData] = useState("");
   const [pkmObject, setPkmObject] = useState({
     sprite: "",
     name: "",
@@ -37,37 +39,46 @@ function App() {
     pokemonsService
       .getPokemon(searchQuery)
       .then((data) => {
-        setPkmObject((prevState) => ({
-          ...prevState,
-          sprite: data["sprites"]["other"]["official-artwork"]["front_default"],
-          name: data["name"],
-          types: data["types"].map((slot) => slot["type"]["name"]),
-          stats: data["stats"].map((stat) => ({
-            [stat["stat"]["name"]]: stat["base_stat"],
-          })),
-          weight: data["weight"],
-          height: data["height"],
-        }));
+        setPokemonData(data);
         window.localStorage.setItem("searchQuery", JSON.stringify(searchQuery));
       })
       .catch((e) => console.log(e.message));
 
     pokemonsService
-      .getPokemonSpecie(searchQuery)
+      .getSpecie(searchQuery)
       .then((data) => {
-        setPkmObject((prevState) => ({
-          ...prevState,
-          description: data["flavor_text_entries"].filter(
-            (entry) => entry["language"]["name"] === "en"
-          )[0]["flavor_text"],
-          genus: data["genera"].filter(
-            (g) => g["language"]["name"] === "en"
-          )[0]["genus"],
-          id: data["id"],
-        }));
+        setSpecieData(data);
       })
       .catch((e) => console.log(e.message));
   }, [searchQuery]);
+
+  useEffect(() => {
+    if (!pokemonData || !specieData) return;
+
+    setPkmObject((prevState) => ({
+      ...prevState,
+      sprite:
+        pokemonData["sprites"]["other"]["official-artwork"]["front_default"],
+      name: pokemonData["name"],
+      types: pokemonData["types"].map((slot) => slot["type"]["name"]),
+      stats: pokemonData["stats"].map((stat) => ({
+        [stat["stat"]["name"]]: stat["base_stat"],
+      })),
+      weight: pokemonData["weight"],
+      height: pokemonData["height"],
+    }));
+
+    setPkmObject((prevState) => ({
+      ...prevState,
+      description: specieData["flavor_text_entries"].filter(
+        (entry) => entry["language"]["name"] === "en"
+      )[0]["flavor_text"],
+      genus: specieData["genera"].filter(
+        (g) => g["language"]["name"] === "en"
+      )[0]["genus"],
+      id: specieData["id"],
+    }));
+  }, [pokemonData, specieData]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
