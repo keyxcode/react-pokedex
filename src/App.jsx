@@ -5,8 +5,12 @@ import PokedexContainer from "./components/PokedexContainer";
 import LightsZone from "./components/LightsZone";
 import ImageZone from "./components/ImageZone";
 import ControlZone from "./components/ControlsZone";
+import decamark from "./assets/decamark.png";
+import pokemonsService from "./services/pokemons";
 
 const MAX_ID_POKEMON = 1010;
+// There are 3 info slides in total
+const MAX_SLIDE_INDEX = 2;
 
 function App() {
   const [searchQuery, setSearchQuery] = useState(
@@ -30,8 +34,8 @@ function App() {
   const [mainLightActive, setMainLightActive] = useState(false);
 
   useEffect(() => {
-    fetch(`https://pokeapi.co/api/v2/pokemon/${searchQuery}`)
-      .then((response) => response.json())
+    pokemonsService
+      .getPokemon(searchQuery)
       .then((data) => {
         setPkmObject((prevState) => ({
           ...prevState,
@@ -46,10 +50,10 @@ function App() {
         }));
         window.localStorage.setItem("searchQuery", JSON.stringify(searchQuery));
       })
-      .catch((e) => console.log(e));
+      .catch((e) => console.log(e.message));
 
-    fetch(`https://pokeapi.co/api/v2/pokemon-species/${searchQuery}/`)
-      .then((response) => response.json())
+    pokemonsService
+      .getPokemonSpecie(searchQuery)
       .then((data) => {
         setPkmObject((prevState) => ({
           ...prevState,
@@ -62,21 +66,26 @@ function App() {
           id: data["id"],
         }));
       })
-      .catch((e) => console.log(e));
+      .catch((e) => console.log(e.message));
   }, [searchQuery]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
 
+    if (formInput === "") return;
+
     const parsedQuery = parseInt(formInput);
+
     if (!isNaN(parsedQuery)) {
+      // search query is a number
       if (parsedQuery < 0 || parsedQuery > MAX_ID_POKEMON) {
         console.log("invalid id");
       } else {
         setSearchQuery(parsedQuery);
       }
     } else {
-      setSearchQuery(formInput);
+      // search query is text based
+      setSearchQuery(formInput.toLowerCase());
       console.log("query is a string");
     }
 
@@ -92,9 +101,6 @@ function App() {
     setSearchQuery(pkmObject.id + 1);
     toggleMainLight();
   };
-
-  // There are 3 info slides in total
-  const MAX_SLIDE_INDEX = 2;
 
   const infoUp = () => {
     const currentSlide =
