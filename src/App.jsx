@@ -25,11 +25,10 @@ function App() {
     name: "",
     types: [],
     stats: [],
-    description: "",
-    genus: "",
     weight: "",
     height: "",
-    id: "",
+    description: "",
+    genus: "",
   });
   const [formInput, setFormInput] = useState("");
   const [activeInfoSlide, setActiveInfoSlide] = useState(0);
@@ -40,44 +39,89 @@ function App() {
       .getPokemon(searchQuery)
       .then((data) => {
         setPokemonData(data);
-        window.localStorage.setItem("searchQuery", JSON.stringify(searchQuery));
       })
-      .catch((e) => console.log(e.message));
+      .catch((e) => {
+        setPkmObject((prevState) => ({
+          ...prevState,
+          sprite: decamark,
+          name: "???",
+          types: [],
+          weight: "",
+          height: "",
+        }));
+        console.log(e.message);
+      });
 
     pokemonsService
       .getSpecie(searchQuery)
       .then((data) => {
         setSpecieData(data);
       })
-      .catch((e) => console.log(e.message));
+      .catch((e) => {
+        setPkmObject((prevState) => ({
+          ...prevState,
+          description: "???",
+          genus: "???",
+        }));
+        console.log(e.message);
+      });
+
+    window.localStorage.setItem("searchQuery", JSON.stringify(searchQuery));
   }, [searchQuery]);
 
   useEffect(() => {
-    if (!pokemonData || !specieData) return;
+    if (pokemonData) {
+      const sprite = pokemonData["sprites"]["other"]["official-artwork"][
+        "front_default"
+      ]
+        ? pokemonData["sprites"]["other"]["official-artwork"]["front_default"]
+        : "";
+      const name = pokemonData["name"] ? pokemonData["name"] : "???";
+      const types = pokemonData["types"]
+        ? pokemonData["types"].map((type) => type["type"]["name"])
+        : [];
+      const stats = pokemonData["stats"]
+        ? pokemonData["stats"].map((stat) => ({
+            [stat["stat"]["name"]]: stat["base_stat"],
+          }))
+        : [];
+      const weight = pokemonData["weight"] ? pokemonData["weight"] : "";
+      const height = pokemonData["height"] ? pokemonData["height"] : "";
 
-    setPkmObject((prevState) => ({
-      ...prevState,
-      sprite:
-        pokemonData["sprites"]["other"]["official-artwork"]["front_default"],
-      name: pokemonData["name"],
-      types: pokemonData["types"].map((slot) => slot["type"]["name"]),
-      stats: pokemonData["stats"].map((stat) => ({
-        [stat["stat"]["name"]]: stat["base_stat"],
-      })),
-      weight: pokemonData["weight"],
-      height: pokemonData["height"],
-    }));
+      setPkmObject((prevState) => ({
+        ...prevState,
+        sprite,
+        name,
+        types,
+        stats,
+        weight,
+        height,
+      }));
+    }
 
-    setPkmObject((prevState) => ({
-      ...prevState,
-      description: specieData["flavor_text_entries"].filter(
-        (entry) => entry["language"]["name"] === "en"
-      )[0]["flavor_text"],
-      genus: specieData["genera"].filter(
-        (g) => g["language"]["name"] === "en"
-      )[0]["genus"],
-      id: specieData["id"],
-    }));
+    if (specieData) {
+      const description =
+        specieData["flavor_text_entries"].filter(
+          (entry) => entry["language"]["name"] === "en"
+        ).length > 0
+          ? specieData["flavor_text_entries"].filter(
+              (entry) => entry["language"]["name"] === "en"
+            )[0]["flavor_text"]
+          : "???";
+      const genus =
+        specieData["genera"].filter((g) => g["language"]["name"] === "en")
+          .length > 0
+          ? specieData["genera"].filter(
+              (g) => g["language"]["name"] === "en"
+            )[0]["genus"]
+          : "???";
+
+      setPkmObject((prevState) => ({
+        ...prevState,
+        description,
+        genus,
+      }));
+    }
   }, [pokemonData, specieData]);
 
   const handleSubmit = (event) => {
@@ -88,16 +132,27 @@ function App() {
     const parsedQuery = parseInt(formInput);
 
     if (!isNaN(parsedQuery)) {
-      // search query is a number
-      if (parsedQuery < 0 || parsedQuery > MAX_ID_POKEMON) {
+      if (parsedQuery < 1 || parsedQuery > MAX_ID_POKEMON) {
         console.log("invalid id");
       } else {
         setSearchQuery(parsedQuery);
       }
     } else {
-      // search query is text based
-      setSearchQuery(formInput.toLowerCase());
-      console.log("query is a string");
+      // convert text-based query to id-based query
+      const textQuery = formInput.toLowerCase();
+
+      pokemonsService
+        .getPokemon(textQuery)
+        .then((data) => {
+          setSearchQuery(data["id"]);
+        })
+        .catch((e) => {
+          console.log(e);
+          pokemonsService
+            .getSpecie(textQuery)
+            .then((data) => setSearchQuery(data["id"]))
+            .catch((e) => console.log(e.message));
+        });
     }
 
     setFormInput("");
@@ -105,11 +160,11 @@ function App() {
   };
 
   const prevPkm = () => {
-    setSearchQuery(pkmObject.id - 1);
+    setSearchQuery((prevState) => prevState - 1);
     toggleMainLight();
   };
   const nextPkm = () => {
-    setSearchQuery(pkmObject.id + 1);
+    setSearchQuery((prevState) => prevState + 1);
     toggleMainLight();
   };
 
@@ -144,7 +199,7 @@ function App() {
         />
         <ImageZone
           sprite={pkmObject.sprite}
-          id={pkmObject.id}
+          id={searchQuery}
           name={pkmObject.name}
         />
         <ControlZone

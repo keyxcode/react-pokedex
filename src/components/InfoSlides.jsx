@@ -23,6 +23,15 @@ const hideStyle = {
 };
 
 const InfoSlides = ({ pkmObject, activeInfoSlide }) => {
+  const weight =
+    typeof pkmObject.weight === "number"
+      ? parseFloat(pkmObject.weight) / 10
+      : "???";
+
+  const height =
+    typeof pkmObject.height === "number"
+      ? parseFloat(pkmObject.height) / 10
+      : "???";
   return (
     <Container>
       <div style={activeInfoSlide === 0 ? showStyle : hideStyle}>
@@ -31,8 +40,8 @@ const InfoSlides = ({ pkmObject, activeInfoSlide }) => {
       <div style={activeInfoSlide === 1 ? showStyle : hideStyle}>
         <div>{pkmObject.genus}</div>
         ---
-        <div>{parseFloat(pkmObject.weight) / 10} kg</div>
-        <div>{parseFloat(pkmObject.height) / 10} m</div>
+        <div>{weight} kg</div>
+        <div>{height} m</div>
         ---
         <ul style={{ paddingLeft: 15, margin: 0 }}>
           {pkmObject.types.map((type) => (
