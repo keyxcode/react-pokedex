@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Light from "./Light";
+import loading from "../assets/loading.png";
 
 const Container = styled.div`
   display: flex;
@@ -60,7 +61,7 @@ const inactiveLightStyle = {
   filter: "brightness(1)",
 };
 
-const ImageZone = ({ sprite, id, name, errorLightActive }) => {
+const ImageZone = ({ sprite, id, name, errorLightActive, isLoading }) => {
   return (
     <Container>
       <DecorationStrip style={{ justifyContent: "center" }}>
@@ -69,9 +70,9 @@ const ImageZone = ({ sprite, id, name, errorLightActive }) => {
         ))}
       </DecorationStrip>
       <ImageContainer>
-        <Image src={sprite} />
+        <Image src={isLoading ? loading : sprite} />
         <div>
-          #{id} {name}
+          #{isLoading ? "..." : id} {isLoading ? "..." : name}
         </div>
       </ImageContainer>
       <DecorationStrip>

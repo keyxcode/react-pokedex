@@ -18,6 +18,7 @@ function App() {
       : 1
   );
   console.log(`Re-rendered with query ${searchQuery}`);
+  const [isLoading, setIsLoading] = useState(false);
   const [pokemonData, setPokemonData] = useState("");
   const [pkmObject, setPkmObject] = useState({
     sprite: "",
@@ -36,6 +37,7 @@ function App() {
 
   useEffect(() => {
     console.log(`calling api with id ${searchQuery}`);
+    setIsLoading(true);
 
     const getData = async () => {
       let data = {};
@@ -132,6 +134,7 @@ function App() {
 
     console.log("...creating new pkm obj");
     setPkmObject(newPokemonObj);
+    setIsLoading(false);
   }, [pokemonData]);
 
   const handleSubmit = async (event) => {
@@ -139,6 +142,7 @@ function App() {
 
     if (formInput === "") return toggleErrorLight();
 
+    setIsLoading(true);
     const parsedQuery = parseInt(formInput);
 
     if (!isNaN(parsedQuery)) {
@@ -166,8 +170,9 @@ function App() {
           toggleMainLight();
           console.log("found id through getSpecie route");
         } catch (e) {
-          console.log(e.message);
+          setIsLoading(false);
           toggleErrorLight();
+          console.log(e.message);
         }
       }
     }
@@ -230,6 +235,7 @@ function App() {
           id={searchQuery}
           name={pkmObject.name}
           errorLightActive={errorLightActive}
+          isLoading={isLoading}
         />
         <ControlZone
           handleSubmit={handleSubmit}
