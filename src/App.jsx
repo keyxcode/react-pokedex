@@ -17,9 +17,8 @@ function App() {
       ? JSON.parse(window.localStorage.getItem("searchQuery"))
       : 1
   );
-  console.log(`query ${searchQuery} initialized`);
+  console.log(`Re-rendered with query ${searchQuery}`);
   const [pokemonData, setPokemonData] = useState("");
-  const [specieData, setSpecieData] = useState("");
   const [pkmObject, setPkmObject] = useState({
     sprite: "",
     name: "",
@@ -36,92 +35,34 @@ function App() {
   const [errorLightActive, setErrorLightActive] = useState(false);
 
   useEffect(() => {
-    console.log(`call api with id ${searchQuery}`);
+    console.log(`calling api with id ${searchQuery}`);
 
     const getData = async () => {
       let data = {};
 
       try {
         const pokemonData = await pokemonsService.getPokemon(searchQuery);
-        data = { ...data, pokemonData };
-        console.log(data);
+        data = { ...data, ...pokemonData };
         console.log("...getPokemon succeeded");
       } catch (e) {
-        const pokemonData = {
-          sprite: decamark,
-          name: "???",
-          types: [],
-          weight: "???",
-          height: "???",
-        };
-        data = {
-          ...data,
-          pokemonData,
-        };
         console.log("...getPokemon failed", e.message);
         toggleErrorLight();
       }
 
       try {
         const specieData = await pokemonsService.getSpecie(searchQuery);
-        data = { ...data, specieData };
+        data = { ...data, ...specieData };
         console.log("...getSpecie succeeded");
       } catch (e) {
-        const specieData = {
-          description: e.message,
-          genus: "???",
-        };
-        data = {
-          ...data,
-          specieData,
-        };
-        console.log("getSpecie failed", e.message);
+        console.log("...getSpecie failed", e.message);
         toggleErrorLight();
       }
 
-      console.log("POKEMON DATA", data.pokemonData);
-      console.log("SPECIE DATA", data.specieData);
-      setPokemonData(data.pokemonData);
-      setSpecieData(data.specieData);
+      console.log("POKEMON DATA", data);
+      setPokemonData(data);
     };
 
     getData();
-
-    // pokemonsService
-    //   .getPokemon(searchQuery)
-    //   .then((data) => {
-    //     console.log("...getPokemon succeeded");
-    //   })
-    //   .catch((e) => {
-    //     setPkmObject((prevState) => ({
-    //       ...prevState,
-    //       sprite: decamark,
-    //       name: "???",
-    //       types: [],
-    //       weight: "???",
-    //       height: "???",
-    //     }));
-    //     console.log(e.message);
-    //     toggleErrorLight();
-    //   });
-
-    // pokemonsService
-    //   .getSpecie(searchQuery)
-    //   .then((data) => {
-    //     console.log("...getSpecie succeeded");
-    //   })
-    //   .catch((e) => {
-    //     setPkmObject((prevState) => ({
-    //       ...prevState,
-    //       description: e.message,
-    //       genus: "???",
-    //     }));
-    //     console.log(e.message);
-    //     toggleErrorLight();
-    //   });
-
-    // setPokemonData(pokemonData);
-    // setSpecieData(specieData);
 
     window.localStorage.setItem("searchQuery", JSON.stringify(searchQuery));
   }, [searchQuery]);
@@ -129,15 +70,23 @@ function App() {
   useEffect(() => {
     console.log("setting pokemonData");
 
-    let newPokemonObj = { ...pkmObject };
+    let newPokemonObj = {
+      sprite: "",
+      name: "",
+      types: [],
+      stats: [],
+      weight: "",
+      height: "",
+      description: "",
+      genus: "",
+    };
 
     if (pokemonData) {
-      console.log("...set pokemonData");
-      const sprite = pokemonData["sprites"]["other"]["official-artwork"][
-        "front_default"
-      ]
+      console.log("...actually setting pokemonData");
+
+      const sprite = pokemonData["sprites"]
         ? pokemonData["sprites"]["other"]["official-artwork"]["front_default"]
-        : "";
+        : decamark;
       const name = pokemonData["name"] ? pokemonData["name"] : "???";
       const types = pokemonData["types"]
         ? pokemonData["types"].map((type) => type["type"]["name"])
@@ -147,8 +96,26 @@ function App() {
             [stat["stat"]["name"]]: stat["base_stat"],
           }))
         : [];
-      const weight = pokemonData["weight"] ? pokemonData["weight"] : "";
-      const height = pokemonData["height"] ? pokemonData["height"] : "";
+      const weight = pokemonData["weight"] ? pokemonData["weight"] : "???";
+      const height = pokemonData["height"] ? pokemonData["height"] : "???";
+
+      const description =
+        pokemonData["flavor_text_entries"] &&
+        pokemonData["flavor_text_entries"].filter(
+          (entry) => entry["language"]["name"] === "en"
+        ).length > 0
+          ? pokemonData["flavor_text_entries"].filter(
+              (entry) => entry["language"]["name"] === "en"
+            )[0]["flavor_text"]
+          : "???";
+      const genus =
+        pokemonData["genera"] &&
+        pokemonData["genera"].filter((g) => g["language"]["name"] === "en")
+          .length > 0
+          ? pokemonData["genera"].filter(
+              (g) => g["language"]["name"] === "en"
+            )[0]["genus"]
+          : "???";
 
       newPokemonObj = {
         ...newPokemonObj,
@@ -158,40 +125,16 @@ function App() {
         stats,
         weight,
         height,
-      };
-    }
-
-    console.log("setting specieData");
-    if (specieData) {
-      console.log("...set specieData");
-      const description =
-        specieData["flavor_text_entries"].filter(
-          (entry) => entry["language"]["name"] === "en"
-        ).length > 0
-          ? specieData["flavor_text_entries"].filter(
-              (entry) => entry["language"]["name"] === "en"
-            )[0]["flavor_text"]
-          : "???";
-      const genus =
-        specieData["genera"].filter((g) => g["language"]["name"] === "en")
-          .length > 0
-          ? specieData["genera"].filter(
-              (g) => g["language"]["name"] === "en"
-            )[0]["genus"]
-          : "???";
-
-      newPokemonObj = {
-        ...newPokemonObj,
         description,
         genus,
       };
     }
 
-    console.log("set new pkm obj");
+    console.log("...creating new pkm obj");
     setPkmObject(newPokemonObj);
-  }, [pokemonData, specieData]);
+  }, [pokemonData]);
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
 
     if (formInput === "") return toggleErrorLight();
@@ -200,6 +143,7 @@ function App() {
 
     if (!isNaN(parsedQuery)) {
       if (parsedQuery < 1 || parsedQuery > MAX_ID_POKEMON) {
+        setFormInput("");
         return toggleErrorLight();
       }
       console.log("searching number query");
@@ -208,27 +152,24 @@ function App() {
       console.log("parsing text query");
       const textQuery = formInput.toLowerCase();
 
-      pokemonsService
-        .getPokemon(textQuery)
-        .then((data) => {
-          console.log("found id through getPokemon route");
-          toggleMainLight();
+      try {
+        const data = await pokemonsService.getPokemon(textQuery);
+        setSearchQuery(data["id"]);
+        toggleMainLight();
+        console.log("found id through getPokemon route");
+      } catch (e) {
+        console.log(e.message);
+
+        try {
+          const data = await pokemonsService.getSpecie(textQuery);
           setSearchQuery(data["id"]);
-        })
-        .catch((e) => {
-          console.log(e);
-          pokemonsService
-            .getSpecie(textQuery)
-            .then((data) => {
-              console.log("found id through getSpecie route");
-              toggleMainLight();
-              setSearchQuery(data["id"]);
-            })
-            .catch((e) => {
-              console.log(e.message);
-              toggleErrorLight();
-            });
-        });
+          toggleMainLight();
+          console.log("found id through getSpecie route");
+        } catch (e) {
+          console.log(e.message);
+          toggleErrorLight();
+        }
+      }
     }
 
     setFormInput("");
