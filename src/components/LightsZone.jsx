@@ -12,12 +12,12 @@ const LightsZoneContainer = styled("div")`
 `;
 
 const activeLightStyle = {
-  transition: "0.3s",
+  transition: "0.5s",
   filter: "brightness(2.5)",
 };
 
 const inactiveLightStyle = {
-  transition: "0.3s",
+  transition: "0.5s",
   filter: "brightness(1)",
 };
 

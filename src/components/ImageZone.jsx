@@ -41,16 +41,26 @@ const Image = styled.img`
   background-color: var(--blue);
 `;
 
-const StaticLight = styled(Light)`
+const RedLight = styled(Light)`
   background-color: var(--dark-red);
 `;
 
-const SmallStaticLight = styled(StaticLight)`
+const SmallStaticLight = styled(RedLight)`
   border: var(--xxs) solid var(--black);
   margin: 0 var(--s);
 `;
 
-const ImageZone = ({ sprite, id, name }) => {
+const activeLightStyle = {
+  transition: "0.5s",
+  filter: "brightness(2.5)",
+};
+
+const inactiveLightStyle = {
+  transition: "0.5s",
+  filter: "brightness(1)",
+};
+
+const ImageZone = ({ sprite, id, name, errorLightActive }) => {
   return (
     <Container>
       <DecorationStrip style={{ justifyContent: "center" }}>
@@ -65,7 +75,9 @@ const ImageZone = ({ sprite, id, name }) => {
         </div>
       </ImageContainer>
       <DecorationStrip>
-        <StaticLight />
+        <RedLight
+          style={errorLightActive ? activeLightStyle : inactiveLightStyle}
+        />
         <div>≡</div>
       </DecorationStrip>
     </Container>

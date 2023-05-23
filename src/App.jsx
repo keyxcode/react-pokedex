@@ -33,6 +33,7 @@ function App() {
   const [formInput, setFormInput] = useState("");
   const [activeInfoSlide, setActiveInfoSlide] = useState(0);
   const [mainLightActive, setMainLightActive] = useState(false);
+  const [errorLightActive, setErrorLightActive] = useState(false);
 
   useEffect(() => {
     pokemonsService
@@ -50,6 +51,7 @@ function App() {
           height: "",
         }));
         console.log(e.message);
+        toggleErrorLight();
       });
 
     pokemonsService
@@ -64,6 +66,7 @@ function App() {
           genus: "???",
         }));
         console.log(e.message);
+        toggleErrorLight();
       });
 
     window.localStorage.setItem("searchQuery", JSON.stringify(searchQuery));
@@ -127,43 +130,52 @@ function App() {
   const handleSubmit = (event) => {
     event.preventDefault();
 
-    if (formInput === "") return;
+    if (formInput === "") return toggleErrorLight();
 
     const parsedQuery = parseInt(formInput);
 
     if (!isNaN(parsedQuery)) {
       if (parsedQuery < 1 || parsedQuery > MAX_ID_POKEMON) {
-        console.log("invalid id");
-      } else {
-        setSearchQuery(parsedQuery);
+        return toggleErrorLight();
       }
+      setSearchQuery(parsedQuery);
     } else {
-      // convert text-based query to id-based query
       const textQuery = formInput.toLowerCase();
 
       pokemonsService
         .getPokemon(textQuery)
         .then((data) => {
           setSearchQuery(data["id"]);
+          toggleMainLight();
         })
         .catch((e) => {
           console.log(e);
           pokemonsService
             .getSpecie(textQuery)
-            .then((data) => setSearchQuery(data["id"]))
-            .catch((e) => console.log(e.message));
+            .then((data) => {
+              toggleMainLight();
+              setSearchQuery(data["id"]);
+            })
+            .catch((e) => {
+              console.log(e.message);
+              toggleErrorLight();
+            });
         });
     }
 
     setFormInput("");
-    toggleMainLight();
   };
 
   const prevPkm = () => {
+    if (searchQuery === 1) {
+      toggleErrorLight();
+      return;
+    }
     setSearchQuery((prevState) => prevState - 1);
     toggleMainLight();
   };
   const nextPkm = () => {
+    if (searchQuery === MAX_ID_POKEMON) return toggleErrorLight();
     setSearchQuery((prevState) => prevState + 1);
     toggleMainLight();
   };
@@ -186,7 +198,14 @@ function App() {
     setMainLightActive(true);
     setTimeout(() => {
       setMainLightActive(false);
-    }, 250);
+    }, 300);
+  };
+
+  const toggleErrorLight = () => {
+    setErrorLightActive(true);
+    setTimeout(() => {
+      setErrorLightActive(false);
+    }, 1000);
   };
 
   return (
@@ -201,6 +220,7 @@ function App() {
           sprite={pkmObject.sprite}
           id={searchQuery}
           name={pkmObject.name}
+          errorLightActive={errorLightActive}
         />
         <ControlZone
           handleSubmit={handleSubmit}
