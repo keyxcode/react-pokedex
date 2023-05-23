@@ -2,14 +2,14 @@ import axios from "axios";
 
 const baseUrl = "https://pokeapi.co/api/v2";
 
-const getPokemon = (query) => {
-  const request = axios.get(`${baseUrl}/pokemon/${query}`);
-  return request.then((response) => response.data);
+const getPokemon = async (query) => {
+  const response = await axios.get(`${baseUrl}/pokemon/${query}`);
+  return response.data;
 };
 
-const getSpecie = (query) => {
-  const request = axios.get(`${baseUrl}/pokemon-species/${query}`);
-  return request.then((response) => response.data);
+const getSpecie = async (query) => {
+  const response = await axios.get(`${baseUrl}/pokemon-species/${query}`);
+  return response.data;
 };
 
 export default { getPokemon, getSpecie };

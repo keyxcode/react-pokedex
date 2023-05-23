@@ -26,12 +26,12 @@ const InfoSlides = ({ pkmObject, activeInfoSlide }) => {
   const weight =
     typeof pkmObject.weight === "number"
       ? parseFloat(pkmObject.weight) / 10
-      : "???";
+      : pkmObject.weight;
 
   const height =
     typeof pkmObject.height === "number"
       ? parseFloat(pkmObject.height) / 10
-      : "???";
+      : pkmObject.height;
   return (
     <Container>
       <div style={activeInfoSlide === 0 ? showStyle : hideStyle}>
