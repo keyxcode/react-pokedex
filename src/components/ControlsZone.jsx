@@ -25,6 +25,8 @@ const ControlZone = ({
   infoUp,
   infoDown,
 }) => {
+  // console.log("Rendering ControlZone");
+
   return (
     <ControlsContainer>
       <SearchForm

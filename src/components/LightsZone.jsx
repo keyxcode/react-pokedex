@@ -23,6 +23,8 @@ const inactiveLightStyle = {
 
 // Need to provide type
 const LightsZone = ({ activeInfoSlide, mainLightActive }) => {
+  // console.log("Rendering LightsZone");
+
   return (
     <LightsZoneContainer>
       <Light

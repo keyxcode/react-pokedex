@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import Light from "./Light";
-import loading from "../assets/loading.png";
+import loading from "../assets/pikachu.gif";
 
 const Container = styled.div`
   display: flex;
@@ -24,7 +24,7 @@ const DecorationStrip = styled.div`
   font-size: xx-large;
 `;
 
-const ImageContainer = styled.div`
+const Screen = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -36,10 +36,13 @@ const ImageContainer = styled.div`
   border: var(--xs) solid var(--black);
 `;
 
-const Image = styled.img`
-  height: auto;
+const ImageContainer = styled.div`
   width: 65%;
+  height: 100%;
   background-color: var(--blue);
+  display: flex;
+  justify-content: center;
+  align-items: center;
 `;
 
 const RedLight = styled(Light)`
@@ -61,7 +64,20 @@ const inactiveLightStyle = {
   filter: "brightness(1)",
 };
 
+const imgLoadingStyle = {
+  height: "auto",
+  width: "50%",
+};
+
+const imgLoadedStyle = {
+  transition: "0.3s",
+  height: "auto",
+  width: "100%",
+};
+
 const ImageZone = ({ sprite, id, name, errorLightActive, isLoading }) => {
+  // console.log("Rendering ImageZone");
+
   return (
     <Container>
       <DecorationStrip style={{ justifyContent: "center" }}>
@@ -69,12 +85,17 @@ const ImageZone = ({ sprite, id, name, errorLightActive, isLoading }) => {
           <SmallStaticLight key={i} size="var(--s)" />
         ))}
       </DecorationStrip>
-      <ImageContainer>
-        <Image src={isLoading ? loading : sprite} />
+      <Screen>
+        <ImageContainer>
+          <img
+            src={isLoading ? loading : sprite}
+            style={isLoading ? imgLoadingStyle : imgLoadedStyle}
+          />
+        </ImageContainer>
         <div>
           #{isLoading ? "..." : id} {isLoading ? "..." : name}
         </div>
-      </ImageContainer>
+      </Screen>
       <DecorationStrip>
         <RedLight
           style={errorLightActive ? activeLightStyle : inactiveLightStyle}

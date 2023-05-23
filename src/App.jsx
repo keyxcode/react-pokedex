@@ -1,5 +1,4 @@
 import { useState, useEffect } from "react";
-import "./App.css";
 import GlobalStyles from "./GlobalStyles";
 import PokedexContainer from "./components/PokedexContainer";
 import LightsZone from "./components/LightsZone";
@@ -17,7 +16,6 @@ function App() {
       ? JSON.parse(window.localStorage.getItem("searchQuery"))
       : 1
   );
-  console.log(`Re-rendered with query ${searchQuery}`);
   const [isLoading, setIsLoading] = useState(false);
   const [pokemonData, setPokemonData] = useState("");
   const [pkmObject, setPkmObject] = useState({
@@ -35,9 +33,10 @@ function App() {
   const [mainLightActive, setMainLightActive] = useState(false);
   const [errorLightActive, setErrorLightActive] = useState(false);
 
+  console.log(`Re-rendering App with query ${searchQuery}`);
+
   useEffect(() => {
-    console.log(`calling api with id ${searchQuery}`);
-    setIsLoading(true);
+    console.log(`Calling api with id ${searchQuery}`);
 
     const getData = async () => {
       let data = {};
@@ -61,81 +60,87 @@ function App() {
       }
 
       console.log("POKEMON DATA", data);
+      window.localStorage.setItem("searchQuery", JSON.stringify(searchQuery));
       setPokemonData(data);
     };
 
     getData();
-
-    window.localStorage.setItem("searchQuery", JSON.stringify(searchQuery));
   }, [searchQuery]);
 
   useEffect(() => {
-    console.log("setting pokemonData");
+    console.log("Creating pokemonObj");
 
-    let newPokemonObj = {
-      sprite: "",
-      name: "",
-      types: [],
-      stats: [],
-      weight: "",
-      height: "",
-      description: "",
-      genus: "",
+    const sprite = pokemonData["sprites"]
+      ? pokemonData["sprites"]["other"]["official-artwork"]["front_default"]
+      : decamark;
+    const name = pokemonData["name"] ? pokemonData["name"] : "???";
+    const types = pokemonData["types"]
+      ? pokemonData["types"].map((type) => type["type"]["name"])
+      : [];
+    const stats = pokemonData["stats"]
+      ? pokemonData["stats"].map((stat) => ({
+          [stat["stat"]["name"]]: stat["base_stat"],
+        }))
+      : [];
+    const weight = pokemonData["weight"] ? pokemonData["weight"] : "???";
+    const height = pokemonData["height"] ? pokemonData["height"] : "???";
+
+    const description =
+      pokemonData["flavor_text_entries"] &&
+      pokemonData["flavor_text_entries"].filter(
+        (entry) => entry["language"]["name"] === "en"
+      ).length > 0
+        ? pokemonData["flavor_text_entries"].filter(
+            (entry) => entry["language"]["name"] === "en"
+          )[0]["flavor_text"]
+        : "???";
+    const genus =
+      pokemonData["genera"] &&
+      pokemonData["genera"].filter((g) => g["language"]["name"] === "en")
+        .length > 0
+        ? pokemonData["genera"].filter(
+            (g) => g["language"]["name"] === "en"
+          )[0]["genus"]
+        : "???";
+
+    const newPokemonObj = {
+      sprite,
+      name,
+      types,
+      stats,
+      weight,
+      height,
+      description,
+      genus,
     };
 
-    if (pokemonData) {
-      console.log("...actually setting pokemonData");
-
-      const sprite = pokemonData["sprites"]
-        ? pokemonData["sprites"]["other"]["official-artwork"]["front_default"]
-        : decamark;
-      const name = pokemonData["name"] ? pokemonData["name"] : "???";
-      const types = pokemonData["types"]
-        ? pokemonData["types"].map((type) => type["type"]["name"])
-        : [];
-      const stats = pokemonData["stats"]
-        ? pokemonData["stats"].map((stat) => ({
-            [stat["stat"]["name"]]: stat["base_stat"],
-          }))
-        : [];
-      const weight = pokemonData["weight"] ? pokemonData["weight"] : "???";
-      const height = pokemonData["height"] ? pokemonData["height"] : "???";
-
-      const description =
-        pokemonData["flavor_text_entries"] &&
-        pokemonData["flavor_text_entries"].filter(
-          (entry) => entry["language"]["name"] === "en"
-        ).length > 0
-          ? pokemonData["flavor_text_entries"].filter(
-              (entry) => entry["language"]["name"] === "en"
-            )[0]["flavor_text"]
-          : "???";
-      const genus =
-        pokemonData["genera"] &&
-        pokemonData["genera"].filter((g) => g["language"]["name"] === "en")
-          .length > 0
-          ? pokemonData["genera"].filter(
-              (g) => g["language"]["name"] === "en"
-            )[0]["genus"]
-          : "???";
-
-      newPokemonObj = {
-        ...newPokemonObj,
-        sprite,
-        name,
-        types,
-        stats,
-        weight,
-        height,
-        description,
-        genus,
-      };
-    }
-
-    console.log("...creating new pkm obj");
+    console.log("...created pkmObj");
     setPkmObject(newPokemonObj);
+
     setIsLoading(false);
   }, [pokemonData]);
+
+  const parseTextQuery = async (textQuery) => {
+    try {
+      const data = await pokemonsService.getPokemon(textQuery);
+      setSearchQuery(data["id"]);
+      toggleMainLight();
+      console.log("...found id through getPokemon route");
+    } catch (e) {
+      console.log(e.message);
+
+      try {
+        const data = await pokemonsService.getSpecie(textQuery);
+        setSearchQuery(data["id"]);
+        toggleMainLight();
+        console.log("...found id through getSpecie route");
+      } catch (e) {
+        setIsLoading(false);
+        toggleErrorLight();
+        console.log(e.message);
+      }
+    }
+  };
 
   const handleSubmit = async (event) => {
     event.preventDefault();
@@ -143,54 +148,36 @@ function App() {
     if (formInput === "") return toggleErrorLight();
 
     setIsLoading(true);
-    const parsedQuery = parseInt(formInput);
+    const parsedIntQuery = parseInt(formInput);
 
-    if (!isNaN(parsedQuery)) {
-      if (parsedQuery < 1 || parsedQuery > MAX_ID_POKEMON) {
+    if (!isNaN(parsedIntQuery)) {
+      if (parsedIntQuery < 1 || parsedIntQuery > MAX_ID_POKEMON) {
         setFormInput("");
+        setIsLoading(false);
         return toggleErrorLight();
       }
-      console.log("searching number query");
-      setSearchQuery(parsedQuery);
+      console.log("Searching number query");
+      setSearchQuery(parsedIntQuery);
     } else {
-      console.log("parsing text query");
+      console.log("Parsing text query");
       const textQuery = formInput.toLowerCase();
-
-      try {
-        const data = await pokemonsService.getPokemon(textQuery);
-        setSearchQuery(data["id"]);
-        toggleMainLight();
-        console.log("found id through getPokemon route");
-      } catch (e) {
-        console.log(e.message);
-
-        try {
-          const data = await pokemonsService.getSpecie(textQuery);
-          setSearchQuery(data["id"]);
-          toggleMainLight();
-          console.log("found id through getSpecie route");
-        } catch (e) {
-          setIsLoading(false);
-          toggleErrorLight();
-          console.log(e.message);
-        }
-      }
+      await parseTextQuery(textQuery);
     }
 
     setFormInput("");
   };
 
   const prevPkm = () => {
-    if (searchQuery === 1) {
-      toggleErrorLight();
-      return;
-    }
+    if (searchQuery === 1) return toggleErrorLight();
+
     setSearchQuery((prevState) => prevState - 1);
+    setIsLoading(true);
     toggleMainLight();
   };
   const nextPkm = () => {
     if (searchQuery === MAX_ID_POKEMON) return toggleErrorLight();
     setSearchQuery((prevState) => prevState + 1);
+    setIsLoading(true);
     toggleMainLight();
   };
 
