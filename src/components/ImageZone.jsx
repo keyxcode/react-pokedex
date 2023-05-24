@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import Light from "./Light";
+import loading from "../assets/pikachu.gif";
 
 const Container = styled.div`
   display: flex;
@@ -90,7 +91,7 @@ const ImageZone = ({ sprite, id, name, errorLightActive, isLoading }) => {
       <Screen>
         <ImageContainer>
           <img
-            src={sprite}
+            src={isLoading ? loading : sprite}
             style={isLoading ? imgLoadingStyle : imgLoadedStyle}
           />
         </ImageContainer>

@@ -123,6 +123,14 @@ function App() {
   const parseTextQuery = async (textQuery) => {
     try {
       const data = await pokemonsService.getPokemon(textQuery);
+
+      // Some characters such as ? or # might lead us here
+      if (data["count"]) {
+        setIsLoading(false);
+        toggleErrorLight();
+        return console.log("...stumbling upon the all pokemon route");
+      }
+
       setSearchQuery(data["id"]);
       toggleMainLight();
       console.log("...found id through getPokemon route");
