@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import Light from "./Light";
-import loading from "../assets/pikachu.gif";
 
 const Container = styled.div`
   display: flex;
@@ -8,7 +7,7 @@ const Container = styled.div`
   justify-content: center;
   align-items: center;
   width: 90%;
-  height: auto;
+  height: 50%;
   border-radius: var(--xs);
   border-bottom-left-radius: var(--l);
   background-color: var(--light-gray);
@@ -29,7 +28,8 @@ const Screen = styled.div`
   justify-content: center;
   align-items: center;
   flex-direction: column;
-  height: auto;
+  width: 100%;
+  height: 100%;
   aspect-ratio: 4/3;
   background-color: var(--blue);
   border-radius: var(--s);
@@ -43,6 +43,8 @@ const ImageContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
+  overflow: hidden;
+  text-align: center;
 `;
 
 const RedLight = styled(Light)`
@@ -88,11 +90,11 @@ const ImageZone = ({ sprite, id, name, errorLightActive, isLoading }) => {
       <Screen>
         <ImageContainer>
           <img
-            src={isLoading ? loading : sprite}
+            src={sprite}
             style={isLoading ? imgLoadingStyle : imgLoadedStyle}
           />
         </ImageContainer>
-        <div>
+        <div style={{ textAlign: "center" }}>
           #{isLoading ? "..." : id} {isLoading ? "..." : name}
         </div>
       </Screen>

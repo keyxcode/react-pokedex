@@ -12,7 +12,7 @@ font-family: "Silkscreen", system-ui, -apple-system, BlinkMacSystemFont,
 --dark-red: #ac2933;
 --light-red: #ee1825;
 --green: #00a851;
---yellow: #fef503;
+--yellow: #fec803;
 --blue: #01aeec;
 --black: #1a1619;
 --dark-gray: #58585a;

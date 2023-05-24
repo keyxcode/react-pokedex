@@ -37,6 +37,7 @@ const InfoSlides = ({ pkmObject, activeInfoSlide }) => {
       <div style={activeInfoSlide === 0 ? showStyle : hideStyle}>
         {pkmObject.description}
       </div>
+
       <div style={activeInfoSlide === 1 ? showStyle : hideStyle}>
         <div>{pkmObject.genus}</div>
         ---
@@ -49,6 +50,7 @@ const InfoSlides = ({ pkmObject, activeInfoSlide }) => {
           ))}
         </ul>
       </div>
+
       <div style={activeInfoSlide === 2 ? showStyle : hideStyle}>
         {pkmObject.stats.map((stat) =>
           Object.entries(stat).map(([key, value]) => (
